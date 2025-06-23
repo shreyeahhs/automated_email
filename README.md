@@ -1,4 +1,4 @@
-for server first refer READM.md in Server then 
+for server first refer README.md in Server then 
 
 cd Server
 python automated_email.py 
