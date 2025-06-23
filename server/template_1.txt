@@ -1,0 +1,6 @@
+Hello {recipient},
+
+This is a demo email from EduDiagno.
+
+Best regards,  
+EduDiagno Team
