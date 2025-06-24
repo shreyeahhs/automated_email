@@ -1,4 +1,4 @@
-from fastapi import FastAPI, UploadFile, Form
+from fastapi import FastAPI, UploadFile, Form, Query
 from fastapi.middleware.cors import CORSMiddleware
 import smtplib
 from email.message import EmailMessage
@@ -25,10 +25,17 @@ async def upload_excel(file: UploadFile):
 
 # Preview Email Template
 @app.get("/api/email_preview")
-async def email_preview(recipient: str = "example@example.com"):
-    with open("template_1.txt", "r") as f:
-        content = f.read()
-    return {"preview": content.format(recipient=recipient)}
+async def email_preview(
+    recipient: str = Query("example@example.com"),
+    template: str = Query(None)
+):
+    if not template:
+        return {"preview": "No template provided."}
+    try:
+        preview = template.format(recipient=recipient)
+    except Exception as e:
+        preview = f"Error formatting template: {e}"
+    return {"preview": preview}
 
 # Send Emails
 @app.post("/api/send_emails")
@@ -56,7 +63,7 @@ async def send_emails(template: str = Form(...)):
                 msg["To"] = recipient
 
                 content = template.format(recipient=recipient)
-                msg.set_content(content)
+                msg.add_alternative(content, subtype="html")
 
                 try:
                     smtp.send_message(msg)

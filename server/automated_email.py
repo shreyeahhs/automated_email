@@ -36,7 +36,7 @@ try:
 
             # Customize and set email content
             personalized_content = email_template.format(recipient=recipient)
-            msg.set_content(personalized_content)
+            msg.add_alternative(personalized_content, subtype="html")
 
             try:
                 smtp.send_message(msg)
